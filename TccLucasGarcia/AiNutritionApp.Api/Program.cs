@@ -1,5 +1,4 @@
-﻿// AiNutritionApp.Api/Program.cs
-using OpenAi.Application;
+﻿using OpenAi.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<OpenAiSettings>(builder.Configuration.GetSection("OpenAI"));
 // Observação: env vars com nome "OpenAI__ApiKey" e "OpenAI__Model" sobrescrevem appsettings. :contentReference[oaicite:2]{index=2}
 
-// 3.2 Registra o provedor (lê IOptions<OpenAiSettings> internamente)
 builder.Services.AddOpenAiNutritionProvider();
 
 var app = builder.Build();

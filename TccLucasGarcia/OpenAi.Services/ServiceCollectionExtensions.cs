@@ -15,7 +15,7 @@ public static class ServiceCollectionExtensions
             var s = sp.GetRequiredService<IOptions<OpenAiSettings>>().Value;
             var apiKey = !string.IsNullOrWhiteSpace(s.ApiKey)
                 ? s.ApiKey
-                : Environment.GetEnvironmentVariable("OPENAI_API_KEY"); // fallback comum
+                : Environment.GetEnvironmentVariable("OPENAI_API_KEY");//fallback
 
             if (string.IsNullOrWhiteSpace(apiKey))
                 throw new InvalidOperationException("API key not configured.");
