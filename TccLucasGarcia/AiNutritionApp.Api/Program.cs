@@ -1,20 +1,45 @@
 ﻿using AiNutritionApp.Application.Abstractions;
 using AiNutritionApp.Contracts;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using OpenAi.Application;
 using System.ComponentModel.DataAnnotations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 3.1 Bind da seção "OpenAI" do appsettings / env vars → OpenAiSettings
+// OpenAI settings via Options (env/appsettings)
 builder.Services.Configure<OpenAiSettings>(builder.Configuration.GetSection("OpenAI"));
-// Observação: env vars com nome "OpenAI__ApiKey" e "OpenAI__Model" sobrescrevem appsettings. :contentReference[oaicite:2]{index=2}
 
+// OpenAI provider (ChatClient + INutritionPlanProvider)
 builder.Services.AddOpenAiNutritionProvider();
 
+// ===== Swagger / OpenAPI =====
+builder.Services.AddEndpointsApiExplorer(); // necessário para Minimal APIs
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "AiNutrition API",
+        Version = "v1",
+        Description = "Gera plano semanal de nutrição via OpenAI (JSON estruturado)."
+    });
+});
+// ============================
+
 var app = builder.Build();
+
+// Habilite Swagger (normalmente apenas em DEV)
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "AiNutrition API v1");
+        c.DocumentTitle = "AiNutrition – Swagger";
+        c.DisplayRequestDuration();
+    });
+}
+// (opcional) Em produção, deixe protegido ou desabilite Swagger UI. :contentReference[oaicite:1]{index=1}
 
 app.MapPost("/plans",
     async Task<Results<Ok<WeeklyPlanDto>, ValidationProblem, ProblemHttpResult>> (
@@ -23,6 +48,7 @@ app.MapPost("/plans",
         ILogger<Program> logger,
         CancellationToken ct) =>
     {
+        // validação por DataAnnotations (se você anotar o DTO)
         var validationContext = new ValidationContext(dto);
         var validationResults = new List<ValidationResult>();
 
@@ -45,8 +71,15 @@ app.MapPost("/plans",
         catch (Exception ex)
         {
             logger.LogError(ex, "Error generating nutrition plan");
-            return TypedResults.Problem("Failed to generate plan.", statusCode: StatusCodes.Status500InternalServerError);
+            return TypedResults.Problem(
+                "Failed to generate plan.",
+                statusCode: StatusCodes.Status500InternalServerError);
         }
-    });
+    })
+    .WithName("GenerateWeeklyPlan")
+    .WithTags("Plans")
+    .Produces<WeeklyPlanDto>(StatusCodes.Status200OK)
+    .ProducesValidationProblem()
+    .ProducesProblem(StatusCodes.Status500InternalServerError);
 
 app.Run();
