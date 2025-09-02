@@ -8,6 +8,11 @@ namespace OpenAi.Application;
 
 public sealed class OpenAiPlanProvider(ChatClient chat) : INutritionPlanProvider
 {
+    private static readonly JsonSerializerOptions JsonOpts = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     public async Task<WeeklyPlanDto> GenerateAsync(NutritionAnswersDto answers, CancellationToken ct)
     {
         // opções por requisição, mas reusando o ResponseFormat estático
@@ -36,6 +41,6 @@ public sealed class OpenAiPlanProvider(ChatClient chat) : INutritionPlanProvider
             opts, ct);
 
         var json = completion.Value.Content[0].Text;
-        return JsonSerializer.Deserialize<WeeklyPlanDto>(json)!;
+        return JsonSerializer.Deserialize<WeeklyPlanDto>(json, JsonOpts)!;
     }
 }
