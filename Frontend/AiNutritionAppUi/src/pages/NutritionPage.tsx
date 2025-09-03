@@ -1,11 +1,12 @@
 import * as React from "react"
 import  type { WeekPlan, NutritionPrefs } from "@/types/nutrition"
-import { generatePlan } from "@/api/generatePlan"
+import { generatePlan } from "@/api/aiNutritionServices"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Separator } from "@/components/ui/separator"
 import { NutritionWizard } from "@/components/Wizard/NutritionWizard"
 import { toast } from "sonner"
+import { NutritionWeekTabs } from "@/components/NutritionPlan/NutritionWeekTabs"
 
 export default function NutritionPage() {
   const [loading, setLoading] = React.useState(false)
@@ -17,7 +18,7 @@ export default function NutritionPage() {
       const result = await generatePlan(prefs)
       setPlan(result)
       toast( "Plano pronto!",{ description: "Seu plano semanal foi gerado com sucesso." })
-    } catch (e: any) {
+    } catch (e) {
       toast("Erro ao gerar plano",{ description: String(e) })
     } finally {
       setLoading(false)

@@ -26,6 +26,16 @@ builder.Services.AddSwaggerGen(c =>
 });
 // ============================
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DevCors", p =>
+        p.WithOrigins("http://localhost:5173")   // exact origin of your Vite dev server
+         .AllowAnyHeader()                       // allows Content-Type: application/json
+         .AllowAnyMethod()                       // allows POST, OPTIONS, etc.
+                                                 // .AllowCredentials()                  // only if you use cookies/authorization header
+    );
+});
+
 var app = builder.Build();
 
 // Habilite Swagger (normalmente apenas em DEV)
@@ -40,6 +50,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 // (opcional) Em produção, deixe protegido ou desabilite Swagger UI. :contentReference[oaicite:1]{index=1}
+
+app.UseCors("DevCors");
 
 app.MapPost("/plans",
     async Task<Results<Ok<WeeklyPlanDto>, ValidationProblem, ProblemHttpResult>> (
