@@ -7,7 +7,7 @@
       "name": "Vite: Edge",
       "url": "http://localhost:5173",
       "webRoot": "${workspaceFolder}/AiNutritionAppUi/src",
-      "preLaunchTask": "yarn dev",
+      "preLaunchTask": "npm: dev - AiNutritionAppUi",
       "cwd": "${workspaceFolder}/AiNutritionAppUi"
     }
   ]
