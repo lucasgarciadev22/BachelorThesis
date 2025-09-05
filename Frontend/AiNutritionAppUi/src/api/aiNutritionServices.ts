@@ -2,11 +2,9 @@ import type { NutritionPrefs, WeekPlan } from "@/types/nutrition";
 
 const BASE_URL = import.meta.env.VITE_NUTRITION_API ?? "http://localhost:5123"
 
-// Helper para extrair ProblemDetails (ASP.NET Minimal APIs)
 async function readProblem(res: Response) {
   try {
     const data = await res.json()
-    // Padrão ProblemDetails
     const title = data.title ?? "Erro de solicitação"
     const detail = data.detail ?? data.message ?? ""
     const errors =
@@ -18,7 +16,6 @@ async function readProblem(res: Response) {
     const msg = [title, detail, errors].filter(Boolean).join(" — ")
     return msg || `HTTP ${res.status} ${res.statusText}`
   } catch {
-    // fallback para texto cru
     try {
       const text = await res.text()
       return text || `HTTP ${res.status} ${res.statusText}`
@@ -66,7 +63,6 @@ export async function generatePlan(
     //   }
     // }
 
-    // compatível com seu tipo WeekPlan
     return data as WeekPlan
   } catch (err: unknown) {
     if (err && typeof err === "object" && (err as { name?: string }).name === "AbortError") {
