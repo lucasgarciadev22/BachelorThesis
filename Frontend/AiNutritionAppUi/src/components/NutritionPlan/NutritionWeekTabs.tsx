@@ -177,7 +177,6 @@ export function NutritionWeekTabs({ plan }: { plan: WeekPlan }) {
             ))}
           </div>
 
-          {/* Lista de compras opcional */}
           {!!d.groceries?.length && (
             <Card className="mt-6">
               <CardHeader>

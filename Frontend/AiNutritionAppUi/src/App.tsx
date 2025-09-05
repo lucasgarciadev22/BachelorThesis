@@ -1,11 +1,17 @@
 
 import './App.css'
-import NutritionPage from './pages/NutritionPage'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import WizardPage from './pages/WizardPage'
+import ResultPage from './pages/ResultPage'
 
 function App() {
 
   return (
-    <NutritionPage />
+        <Routes>
+      <Route path="/" element={<WizardPage />} />
+      <Route path="/result" element={<ResultPage />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   )
 }
 
