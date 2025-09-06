@@ -1,12 +1,12 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs"
-import { Card, CardHeader, CardTitle, CardContent } from "../ui/card"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
+import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import { friendlyDate } from "@/lib/utils/format";
 import type { WeeklyPlanDto } from "@/types/nutrition";
 import { DaySummary } from "../Macros/DaySummary";
 import MealCard from "../Macros/MealCard";
 
 export function NutritionWeekTabs({ plan }: { plan: WeeklyPlanDto }) {
-  const firstDay = plan.days[0]?.date ?? "Dia 1"
+  const firstDay = plan.days[0]?.date ?? "Dia 1";
 
   return (
     <Tabs defaultValue={firstDay} className="w-full">
@@ -34,7 +34,9 @@ export function NutritionWeekTabs({ plan }: { plan: WeeklyPlanDto }) {
               </CardHeader>
               <CardContent>
                 <ul className="list-disc pl-5 text-sm text-muted-foreground grid grid-cols-2 md:grid-cols-3 gap-y-1">
-                  {d.groceries.map((g) => <li key={g}>{g}</li>)}
+                  {d.groceries.map((g) => (
+                    <li key={g}>{g}</li>
+                  ))}
                 </ul>
               </CardContent>
             </Card>
@@ -42,5 +44,5 @@ export function NutritionWeekTabs({ plan }: { plan: WeeklyPlanDto }) {
         </TabsContent>
       ))}
     </Tabs>
-  )
+  );
 }

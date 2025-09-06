@@ -1,0 +1,10 @@
+node_modules
+dist
+build
+coverage
+.eslintcache
+*.log
+.vscode
+.next
+.vite
+out

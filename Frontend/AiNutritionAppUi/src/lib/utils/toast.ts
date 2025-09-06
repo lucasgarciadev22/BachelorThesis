@@ -1,5 +1,5 @@
-import { variants } from "@/components/ui/toast"
-import { toast, type ExternalToast } from "sonner"
+import { variants } from "@/components/ui/toast";
+import { toast, type ExternalToast } from "sonner";
 
 export const Duration = {
   Short: 3000,
@@ -9,47 +9,47 @@ export const Duration = {
 } as const;
 
 export const toastUtils = {
-  message: (message: string, data?:ExternalToast) =>
+  message: (message: string, data?: ExternalToast) =>
     toast.message(message, {
-        duration: data?.duration??Duration.Short,
-        className:data?.className?? variants.info.className,
-        ...data,
+      duration: data?.duration ?? Duration.Short,
+      className: data?.className ?? variants.info.className,
+      ...data,
     }),
-  success: (message: string, data?:ExternalToast) =>
+  success: (message: string, data?: ExternalToast) =>
     toast.success(message, {
-        duration: data?.duration??Duration.Short,
-        icon: data?.icon??variants.success.icon,
-        className: data?.className??variants.success.className,
-        ...data,
+      duration: data?.duration ?? Duration.Short,
+      icon: data?.icon ?? variants.success.icon,
+      className: data?.className ?? variants.success.className,
+      ...data,
     }),
-  info: (message: string, data?:ExternalToast) =>
+  info: (message: string, data?: ExternalToast) =>
     toast.info(message, {
-        duration: data?.duration??Duration.Short,
-        icon: data?.icon??variants.info.icon,
-        className: data?.className??variants.info.className,
-        ...data,
+      duration: data?.duration ?? Duration.Short,
+      icon: data?.icon ?? variants.info.icon,
+      className: data?.className ?? variants.info.className,
+      ...data,
     }),
-  warning: (message: string, data?:ExternalToast) =>
+  warning: (message: string, data?: ExternalToast) =>
     toast.warning(message, {
-        duration: data?.duration??Duration.Short,
-        icon: data?.icon??variants.warning.icon,
-        className: data?.className??variants.warning.className,
-        ...data,
+      duration: data?.duration ?? Duration.Short,
+      icon: data?.icon ?? variants.warning.icon,
+      className: data?.className ?? variants.warning.className,
+      ...data,
     }),
-  error: (message: string, data?:ExternalToast) =>
+  error: (message: string, data?: ExternalToast) =>
     toast.error(message, {
-        duration: data?.duration??Duration.Short,
-        icon: data?.icon??variants.error.icon,
-        className: data?.className??variants.error.className,
-        ...data,
+      duration: data?.duration ?? Duration.Short,
+      icon: data?.icon ?? variants.error.icon,
+      className: data?.className ?? variants.error.className,
+      ...data,
     }),
-  loading:(message: string, data?:ExternalToast) =>  
+  loading: (message: string, data?: ExternalToast) =>
     toast.loading(message, {
       icon: variants.loading.icon,
       className: variants.loading.className,
-      duration:data?.duration??Duration.Infinite,
-      closeButton: data?.closeButton??true,
+      duration: data?.duration ?? Duration.Infinite,
+      closeButton: data?.closeButton ?? true,
       cancel: data?.cancel,
       ...data,
     }),
-}
+};

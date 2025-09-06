@@ -1,14 +1,14 @@
-import { Link, Navigate } from "react-router-dom"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { NutritionWeekTabs } from "@/components/NutritionPlan/NutritionWeekTabs"
-import { usePlan } from "@/hooks/usePlan"
+import { Link, Navigate } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { NutritionWeekTabs } from "@/components/NutritionPlan/NutritionWeekTabs";
+import { usePlan } from "@/hooks/usePlan";
 
 export default function ResultPage() {
-  const { plan } = usePlan()
+  const { plan } = usePlan();
 
   if (!plan) {
     //Return to wizard if no plan is set
-    return <Navigate to="/" replace />
+    return <Navigate to="/" replace />;
   }
 
   return (
@@ -30,5 +30,5 @@ export default function ResultPage() {
         </Link>
       </div>
     </div>
-  )
+  );
 }

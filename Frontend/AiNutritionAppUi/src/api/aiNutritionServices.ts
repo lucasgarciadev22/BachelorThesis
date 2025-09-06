@@ -1,42 +1,42 @@
 import type { NutritionAnswersDto, WeeklyPlanDto } from "@/types/nutrition";
 
-const BASE_URL = import.meta.env.VITE_NUTRITION_API ?? "http://localhost:5123"
+const BASE_URL = import.meta.env.VITE_NUTRITION_API ?? "http://localhost:5123";
 
 async function readProblem(res: Response) {
   try {
-    const data = await res.json()
-    const title = data.title ?? "Erro de solicitação"
-    const detail = data.detail ?? data.message ?? ""
+    const data = await res.json();
+    const title = data.title ?? "Erro de solicitação";
+    const detail = data.detail ?? data.message ?? "";
     const errors =
       data.errors && typeof data.errors === "object"
         ? Object.entries(data.errors)
             .map(([k, v]) => `${k}: ${(v as string[]).join(", ")}`)
             .join(" | ")
-        : ""
-    const msg = [title, detail, errors].filter(Boolean).join(" — ")
-    return msg || `HTTP ${res.status} ${res.statusText}`
+        : "";
+    const msg = [title, detail, errors].filter(Boolean).join(" — ");
+    return msg || `HTTP ${res.status} ${res.statusText}`;
   } catch {
     try {
-      const text = await res.text()
-      return text || `HTTP ${res.status} ${res.statusText}`
+      const text = await res.text();
+      return text || `HTTP ${res.status} ${res.statusText}`;
     } catch {
-      return `HTTP ${res.status} ${res.statusText}`
+      return `HTTP ${res.status} ${res.statusText}`;
     }
   }
 }
 
 export async function generatePlan(
   prefs: NutritionAnswersDto,
-  opts?: { signal?: AbortSignal; timeoutMs?: number; validate?: boolean }
+  opts?: { signal?: AbortSignal; timeoutMs?: number; validate?: boolean },
 ): Promise<WeeklyPlanDto> {
-  const timeoutMs = opts?.timeoutMs ?? 120000
-  const controller = new AbortController()
-  const to = setTimeout(() => controller.abort(), timeoutMs)
+  const timeoutMs = opts?.timeoutMs ?? 120000;
+  const controller = new AbortController();
+  const to = setTimeout(() => controller.abort(), timeoutMs);
   const signal = opts?.signal
     ? typeof AbortSignal.any === "function"
       ? AbortSignal.any([opts.signal, controller.signal])
       : controller.signal
-    : controller.signal
+    : controller.signal;
 
   try {
     const res = await fetch(`${BASE_URL}/plans`, {
@@ -47,13 +47,13 @@ export async function generatePlan(
       },
       body: JSON.stringify(prefs),
       signal,
-    })
+    });
 
     if (!res.ok) {
-      throw new Error(await readProblem(res))
+      throw new Error(await readProblem(res));
     }
 
-    const data = (await res.json()) as WeeklyPlanDto
+    const data = (await res.json()) as WeeklyPlanDto;
 
     // if (opts?.validate !== false) {
     //   const parsed = WeekPlanSchema.safeParse(data)
@@ -63,13 +63,17 @@ export async function generatePlan(
     //   }
     // }
 
-    return data as WeeklyPlanDto
+    return data as WeeklyPlanDto;
   } catch (err: unknown) {
-    if (err && typeof err === "object" && (err as { name?: string }).name === "AbortError") {
-      throw new Error("Tempo de requisição esgotado (timeout).")
+    if (
+      err &&
+      typeof err === "object" &&
+      (err as { name?: string }).name === "AbortError"
+    ) {
+      throw new Error("Tempo de requisição esgotado (timeout).");
     }
-    throw err instanceof Error ? err : new Error(String(err))
+    throw err instanceof Error ? err : new Error(String(err));
   } finally {
-    clearTimeout(to)
+    clearTimeout(to);
   }
 }

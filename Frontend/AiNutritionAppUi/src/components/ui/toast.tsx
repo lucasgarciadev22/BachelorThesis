@@ -1,7 +1,13 @@
-import { AlertTriangle, CheckCircle, Info, Loader2, XCircle } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle,
+  Info,
+  Loader2,
+  XCircle,
+} from "lucide-react";
 
 const toastBaseClasses =
-  "flex items-center gap-2 rounded-xl px-3 py-2 text-sm shadow-md" as const
+  "flex items-center gap-2 rounded-xl px-3 py-2 text-sm shadow-md" as const;
 
 export const variants = {
   success: {
@@ -24,4 +30,4 @@ export const variants = {
     icon: <Loader2 className="h-4 w-4 animate-spin text-blue-600" />,
     className: `${toastBaseClasses} bg-blue-50 text-blue-800 border border-blue-200`,
   },
-}
+};

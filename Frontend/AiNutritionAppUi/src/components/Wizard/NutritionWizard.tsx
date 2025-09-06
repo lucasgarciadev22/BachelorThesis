@@ -1,39 +1,59 @@
-import * as React from "react"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator"
-import { motion } from "framer-motion"
-import { Sparkles, ChevronRight, ChevronLeft, Loader2 } from "lucide-react"
-import type { NutritionAnswersDto } from "@/types/nutrition"
-import { csvToArray } from "@/lib/utils/format"
-import { toastUtils } from "@/lib/utils/toast"
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { motion } from "framer-motion";
+import { Sparkles, ChevronRight, ChevronLeft, Loader2 } from "lucide-react";
+import type { NutritionAnswersDto } from "@/types/nutrition";
+import { csvToArray } from "@/lib/utils/format";
+import { toastUtils } from "@/lib/utils/toast";
 
 const Schema = z.object({
   goal: z.enum(["cutting", "maintenance", "bulking"]),
   preferences: z.string().optional(),
   dislikes: z.string().optional(),
   allergies: z.string().optional(),
-  dietaryPattern: z.enum(["onívoro", "vegetariano", "vegano", "pescetariano", "outro"]),
-  mealsPerDay: z.number().refine((v) => Number.isFinite(v), "Obrigatório")
-    .int().min(1).max(8),
-  targetCalories: z.number().refine((v) => Number.isFinite(v), "Obrigatório")
-    .int().min(800).max(6000),
+  dietaryPattern: z.enum([
+    "onívoro",
+    "vegetariano",
+    "vegano",
+    "pescetariano",
+    "outro",
+  ]),
+  mealsPerDay: z
+    .number()
+    .refine((v) => Number.isFinite(v), "Obrigatório")
+    .int()
+    .min(1)
+    .max(8),
+  targetCalories: z
+    .number()
+    .refine((v) => Number.isFinite(v), "Obrigatório")
+    .int()
+    .min(800)
+    .max(6000),
   budget: z.enum(["baixo", "médio", "alto"]),
   cookingSkill: z.enum(["básico", "intermediário", "avançado"]),
   timePerMeal: z.enum(["curto", "médio", "longo"]),
-})
+});
 
-type FormValues = z.infer<typeof Schema>
+type FormValues = z.infer<typeof Schema>;
 
 type Props = {
-  onSubmit: (prefs: NutritionAnswersDto) => Promise<void> | void
-}
+  onSubmit: (prefs: NutritionAnswersDto) => Promise<void> | void;
+};
 
 const STEP_FIELDS: (keyof FormValues)[][] = [
   ["goal"],
@@ -41,7 +61,7 @@ const STEP_FIELDS: (keyof FormValues)[][] = [
   ["mealsPerDay", "targetCalories"],
   ["budget", "cookingSkill", "timePerMeal"],
   ["preferences", "dislikes", "allergies"],
-]
+];
 
 const PHRASES = [
   "Analisando seus gostos…",
@@ -49,13 +69,11 @@ const PHRASES = [
   "Preparando receitas deliciosas…",
   "Otimizando custo e praticidade…",
   "Montando sua semana perfeita…",
-]
-
-
+];
 
 export function NutritionWizard({ onSubmit }: Props) {
-  const [step, setStep] = React.useState(0)
-  const [isSubmitting, setIsSubmitting] = React.useState(false)
+  const [step, setStep] = React.useState(0);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(Schema),
@@ -72,33 +90,38 @@ export function NutritionWizard({ onSubmit }: Props) {
       allergies: "",
     },
     mode: "onChange",
-  })
+  });
 
-  const totalSteps = STEP_FIELDS.length
+  const totalSteps = STEP_FIELDS.length;
 
   async function next() {
-    const fields = STEP_FIELDS[step]
-    const ok = await form.trigger(fields as (keyof FormValues)[], { shouldFocus: false })
-    if (ok) setStep((s) => Math.min(s + 1, totalSteps - 1))
+    const fields = STEP_FIELDS[step];
+    const ok = await form.trigger(fields as (keyof FormValues)[], {
+      shouldFocus: false,
+    });
+    if (ok) setStep((s) => Math.min(s + 1, totalSteps - 1));
   }
 
   function back() {
-    setStep((s) => Math.max(s - 1, 0))
+    setStep((s) => Math.max(s - 1, 0));
   }
 
   async function submitAll(values: FormValues) {
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     const id = toastUtils.loading("Gerando plano com IA…", {
       description: PHRASES[0],
       duration: Infinity,
       icon: <Loader2 className="size-4 animate-spin" />,
-    })
-    let idx = 0
+    });
+    let idx = 0;
     const interval = setInterval(() => {
-      idx = (idx + 1) % PHRASES.length
-      toastUtils.message("Gerando plano com IA…", { id, description: PHRASES[idx] })
-    }, 3000)
+      idx = (idx + 1) % PHRASES.length;
+      toastUtils.message("Gerando plano com IA…", {
+        id,
+        description: PHRASES[idx],
+      });
+    }, 3000);
 
     try {
       const prefs: NutritionAnswersDto = {
@@ -106,18 +129,21 @@ export function NutritionWizard({ onSubmit }: Props) {
         preferences: csvToArray(values.preferences),
         dislikes: csvToArray(values.dislikes),
         allergies: csvToArray(values.allergies),
-      }
-      await onSubmit(prefs)
-      toastUtils.success("Plano pronto!", { id, description: "Seu plano semanal foi gerado com sucesso." })
+      };
+      await onSubmit(prefs);
+      toastUtils.success("Plano pronto!", {
+        id,
+        description: "Seu plano semanal foi gerado com sucesso.",
+      });
     } catch (e) {
-      toastUtils.error("Erro ao gerar plano", { id, description: String(e) })
+      toastUtils.error("Erro ao gerar plano", { id, description: String(e) });
     } finally {
-      clearInterval(interval)
-      setIsSubmitting(false)
+      clearInterval(interval);
+      setIsSubmitting(false);
     }
   }
 
-  const progressPct = ((step + 1) / totalSteps) * 100
+  const progressPct = ((step + 1) / totalSteps) * 100;
 
   return (
     <div className="grid gap-6">
@@ -132,10 +158,7 @@ export function NutritionWizard({ onSubmit }: Props) {
       </div>
 
       {/* Steps */}
-      <form
-        onSubmit={form.handleSubmit(submitAll)}
-        className="grid gap-6"
-      >
+      <form onSubmit={form.handleSubmit(submitAll)} className="grid gap-6">
         <motion.div
           key={step}
           initial={{ opacity: 0, y: 8 }}
@@ -149,14 +172,22 @@ export function NutritionWizard({ onSubmit }: Props) {
               <Select
                 defaultValue={form.getValues("goal")}
                 onValueChange={(v) =>
-                  form.setValue("goal", v as FormValues["goal"], { shouldValidate: true })
+                  form.setValue("goal", v as FormValues["goal"], {
+                    shouldValidate: true,
+                  })
                 }
               >
-                <SelectTrigger><SelectValue placeholder="Selecione…" /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione…" />
+                </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="cutting">Cutting (perder gordura)</SelectItem>
+                  <SelectItem value="cutting">
+                    Cutting (perder gordura)
+                  </SelectItem>
                   <SelectItem value="maintenance">Manutenção</SelectItem>
-                  <SelectItem value="bulking">Bulking (ganho de massa)</SelectItem>
+                  <SelectItem value="bulking">
+                    Bulking (ganho de massa)
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -168,10 +199,16 @@ export function NutritionWizard({ onSubmit }: Props) {
               <Select
                 defaultValue={form.getValues("dietaryPattern")}
                 onValueChange={(v) =>
-                  form.setValue("dietaryPattern", v as FormValues["dietaryPattern"], { shouldValidate: true })
+                  form.setValue(
+                    "dietaryPattern",
+                    v as FormValues["dietaryPattern"],
+                    { shouldValidate: true },
+                  )
                 }
               >
-                <SelectTrigger><SelectValue placeholder="Selecione…" /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione…" />
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="onívoro">Onívoro</SelectItem>
                   <SelectItem value="vegetariano">Vegetariano</SelectItem>
@@ -213,10 +250,14 @@ export function NutritionWizard({ onSubmit }: Props) {
                 <Select
                   defaultValue={form.getValues("budget")}
                   onValueChange={(v) =>
-                    form.setValue("budget", v as FormValues["budget"], { shouldValidate: true })
+                    form.setValue("budget", v as FormValues["budget"], {
+                      shouldValidate: true,
+                    })
                   }
                 >
-                  <SelectTrigger><SelectValue placeholder="Selecione…" /></SelectTrigger>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione…" />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="baixo">Baixo</SelectItem>
                     <SelectItem value="médio">Médio</SelectItem>
@@ -230,10 +271,16 @@ export function NutritionWizard({ onSubmit }: Props) {
                 <Select
                   defaultValue={form.getValues("cookingSkill")}
                   onValueChange={(v) =>
-                    form.setValue("cookingSkill", v as FormValues["cookingSkill"], { shouldValidate: true })
+                    form.setValue(
+                      "cookingSkill",
+                      v as FormValues["cookingSkill"],
+                      { shouldValidate: true },
+                    )
                   }
                 >
-                  <SelectTrigger><SelectValue placeholder="Selecione…" /></SelectTrigger>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione…" />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="básico">Básico</SelectItem>
                     <SelectItem value="intermediário">Intermediário</SelectItem>
@@ -247,10 +294,16 @@ export function NutritionWizard({ onSubmit }: Props) {
                 <Select
                   defaultValue={form.getValues("timePerMeal")}
                   onValueChange={(v) =>
-                    form.setValue("timePerMeal", v as FormValues["timePerMeal"], { shouldValidate: true })
+                    form.setValue(
+                      "timePerMeal",
+                      v as FormValues["timePerMeal"],
+                      { shouldValidate: true },
+                    )
                   }
                 >
-                  <SelectTrigger><SelectValue placeholder="Selecione…" /></SelectTrigger>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione…" />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="curto">Curto</SelectItem>
                     <SelectItem value="médio">Médio</SelectItem>
@@ -266,15 +319,24 @@ export function NutritionWizard({ onSubmit }: Props) {
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="grid gap-2">
                   <Label>Preferências (separe por vírgula)</Label>
-                  <Textarea placeholder="frango, arroz, abacate" {...form.register("preferences")} />
+                  <Textarea
+                    placeholder="frango, arroz, abacate"
+                    {...form.register("preferences")}
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label>Desgostos (separe por vírgula)</Label>
-                  <Textarea placeholder="peixe, ..." {...form.register("dislikes")} />
+                  <Textarea
+                    placeholder="peixe, ..."
+                    {...form.register("dislikes")}
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label>Alergias (separe por vírgula)</Label>
-                  <Textarea placeholder="lactose, ..." {...form.register("allergies")} />
+                  <Textarea
+                    placeholder="lactose, ..."
+                    {...form.register("allergies")}
+                  />
                 </div>
               </div>
 
@@ -282,7 +344,11 @@ export function NutritionWizard({ onSubmit }: Props) {
 
               {/* Summary */}
               <div className="text-sm text-muted-foreground">
-                Revise e clique em <span className="font-medium text-foreground">“Gerar com IA”</span> ✨
+                Revise e clique em{" "}
+                <span className="font-medium text-foreground">
+                  “Gerar com IA”
+                </span>{" "}
+                ✨
               </div>
             </div>
           )}
@@ -320,13 +386,16 @@ export function NutritionWizard({ onSubmit }: Props) {
         </div>
       </form>
     </div>
-  )
+  );
 }
 
 function GenerateAiPlanButton({
   children,
   disabled,
-}: { children: React.ReactNode; disabled?: boolean }) {
+}: {
+  children: React.ReactNode;
+  disabled?: boolean;
+}) {
   return (
     <motion.button
       type="submit"
@@ -351,7 +420,12 @@ function GenerateAiPlanButton({
         className="pointer-events-none absolute -inset-1 rounded-2xl"
         initial={{ x: "-120%" }}
         animate={{ x: "120%" }}
-        transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut", delay: 0.2 }}
+        transition={{
+          repeat: Infinity,
+          duration: 2.2,
+          ease: "easeInOut",
+          delay: 0.2,
+        }}
         style={{
           background:
             "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%)",
@@ -361,9 +435,7 @@ function GenerateAiPlanButton({
             "radial-gradient(14px 14px at 50% 50%, black 60%, transparent 61%)",
         }}
       />
-      <span className="relative z-[1] flex items-center gap-2">
-        {children}
-      </span>
+      <span className="relative z-[1] flex items-center gap-2">{children}</span>
     </motion.button>
-  )
+  );
 }

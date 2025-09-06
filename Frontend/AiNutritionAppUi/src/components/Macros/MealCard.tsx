@@ -1,5 +1,5 @@
 import type { Meal } from "@/types/nutrition";
-import { Card, CardHeader, CardTitle, CardContent } from "../ui/card"
+import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import MacroPie from "./MacroPie";
 
 export default function MealCard({ meal }: { meal: Meal }) {
@@ -14,7 +14,12 @@ export default function MealCard({ meal }: { meal: Meal }) {
         <div className="text-sm">
           <div className="font-medium mb-1">Informações</div>
           <div className="grid grid-cols-3 gap-2 text-muted-foreground">
-            <div><span className="font-semibold text-foreground">{meal.calories}</span> kcal</div>
+            <div>
+              <span className="font-semibold text-foreground">
+                {meal.calories}
+              </span>{" "}
+              kcal
+            </div>
             <div>P: {meal.macros.protein} g</div>
             <div>C: {meal.macros.carbs} g</div>
             <div>G: {meal.macros.fat} g</div>
@@ -24,7 +29,9 @@ export default function MealCard({ meal }: { meal: Meal }) {
           <div className="font-medium mb-1">Ingredientes</div>
           <ul className="list-disc pl-5 space-y-0.5">
             {meal.ingredients.map((ing) => (
-              <li key={ing} className="text-muted-foreground">{ing}</li>
+              <li key={ing} className="text-muted-foreground">
+                {ing}
+              </li>
             ))}
           </ul>
         </div>
@@ -40,5 +47,5 @@ export default function MealCard({ meal }: { meal: Meal }) {
         )}
       </CardContent>
     </Card>
-  )
+  );
 }
