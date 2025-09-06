@@ -24,7 +24,7 @@ export type WeeklyPlanDto = {
 
 export type NutritionAnswersDto = {
   goal: "cutting" | "maintenance" | "bulking";
-  preferences: string[]; // likes
+  preferences: string[];
   dislikes: string[];
   allergies: string[];
   dietaryPattern:

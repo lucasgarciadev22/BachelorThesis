@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,68 +14,23 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { motion } from "framer-motion";
-import { Sparkles, ChevronRight, ChevronLeft, Loader2 } from "lucide-react";
+import { Sparkles, ChevronRight, ChevronLeft } from "lucide-react";
 import type { NutritionAnswersDto } from "@/types/nutrition";
 import { csvToArray } from "@/lib/utils/format";
 import { toastUtils } from "@/lib/utils/toast";
-
-const Schema = z.object({
-  goal: z.enum(["cutting", "maintenance", "bulking"]),
-  preferences: z.string().optional(),
-  dislikes: z.string().optional(),
-  allergies: z.string().optional(),
-  dietaryPattern: z.enum([
-    "onívoro",
-    "vegetariano",
-    "vegano",
-    "pescetariano",
-    "outro",
-  ]),
-  mealsPerDay: z
-    .number()
-    .refine((v) => Number.isFinite(v), "Obrigatório")
-    .int()
-    .min(1)
-    .max(8),
-  targetCalories: z
-    .number()
-    .refine((v) => Number.isFinite(v), "Obrigatório")
-    .int()
-    .min(800)
-    .max(6000),
-  budget: z.enum(["baixo", "médio", "alto"]),
-  cookingSkill: z.enum(["básico", "intermediário", "avançado"]),
-  timePerMeal: z.enum(["curto", "médio", "longo"]),
-});
-
-type FormValues = z.infer<typeof Schema>;
+import { PHRASES, STEP_FIELDS } from "@/lib/constants/wizard";
+import { WizardSchema, type FormValues } from "@/types/wizard";
 
 type Props = {
   onSubmit: (prefs: NutritionAnswersDto) => Promise<void> | void;
 };
-
-const STEP_FIELDS: (keyof FormValues)[][] = [
-  ["goal"],
-  ["dietaryPattern"],
-  ["mealsPerDay", "targetCalories"],
-  ["budget", "cookingSkill", "timePerMeal"],
-  ["preferences", "dislikes", "allergies"],
-];
-
-const PHRASES = [
-  "Analisando seus gostos…",
-  "Calculando macros ideais…",
-  "Preparando receitas deliciosas…",
-  "Otimizando custo e praticidade…",
-  "Montando sua semana perfeita…",
-];
 
 export function NutritionWizard({ onSubmit }: Props) {
   const [step, setStep] = React.useState(0);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(Schema),
+    resolver: zodResolver(WizardSchema),
     defaultValues: {
       goal: "maintenance",
       dietaryPattern: "onívoro",
@@ -112,7 +66,6 @@ export function NutritionWizard({ onSubmit }: Props) {
     const id = toastUtils.loading("Gerando plano com IA…", {
       description: PHRASES[0],
       duration: Infinity,
-      icon: <Loader2 className="size-4 animate-spin" />,
     });
     let idx = 0;
     const interval = setInterval(() => {

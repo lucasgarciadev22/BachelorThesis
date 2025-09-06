@@ -1,4 +1,4 @@
-import type { Macros } from "../types/nutrition";
+import type { Macros } from "@/types/nutrition";
 
 export const kcalFromMacros = (m: Macros) => ({
   Protein: m.protein * 4,
