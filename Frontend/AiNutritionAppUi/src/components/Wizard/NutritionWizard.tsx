@@ -8,10 +8,11 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
-import { toast } from "sonner"
 import { motion } from "framer-motion"
 import { Sparkles, ChevronRight, ChevronLeft, Loader2 } from "lucide-react"
-import type { NutritionPrefs } from "@/types/nutrition"
+import type { NutritionAnswersDto } from "@/types/nutrition"
+import { csvToArray } from "@/lib/utils/format"
+import { toastUtils } from "@/lib/utils/toast"
 
 const Schema = z.object({
   goal: z.enum(["cutting", "maintenance", "bulking"]),
@@ -31,7 +32,7 @@ const Schema = z.object({
 type FormValues = z.infer<typeof Schema>
 
 type Props = {
-  onSubmit: (prefs: NutritionPrefs) => Promise<void> | void
+  onSubmit: (prefs: NutritionAnswersDto) => Promise<void> | void
 }
 
 const STEP_FIELDS: (keyof FormValues)[][] = [
@@ -50,12 +51,7 @@ const PHRASES = [
   "Montando sua semana perfeita…",
 ]
 
-function csvToArray(s?: string) {
-  return (s ?? "")
-    .split(",")
-    .map((x) => x.trim())
-    .filter(Boolean)
-}
+
 
 export function NutritionWizard({ onSubmit }: Props) {
   const [step, setStep] = React.useState(0)
@@ -93,7 +89,7 @@ export function NutritionWizard({ onSubmit }: Props) {
   async function submitAll(values: FormValues) {
     setIsSubmitting(true)
 
-    const id = toast.loading("Gerando plano com IA…", {
+    const id = toastUtils.loading("Gerando plano com IA…", {
       description: PHRASES[0],
       duration: Infinity,
       icon: <Loader2 className="size-4 animate-spin" />,
@@ -101,20 +97,20 @@ export function NutritionWizard({ onSubmit }: Props) {
     let idx = 0
     const interval = setInterval(() => {
       idx = (idx + 1) % PHRASES.length
-      toast.message("Gerando plano com IA…", { id, description: PHRASES[idx] })
-    }, 1500)
+      toastUtils.message("Gerando plano com IA…", { id, description: PHRASES[idx] })
+    }, 3000)
 
     try {
-      const prefs: NutritionPrefs = {
+      const prefs: NutritionAnswersDto = {
         ...values,
         preferences: csvToArray(values.preferences),
         dislikes: csvToArray(values.dislikes),
         allergies: csvToArray(values.allergies),
       }
       await onSubmit(prefs)
-      toast.success("Plano pronto!", { id, description: "Seu plano semanal foi gerado com sucesso." })
+      toastUtils.success("Plano pronto!", { id, description: "Seu plano semanal foi gerado com sucesso." })
     } catch (e) {
-      toast.error("Erro ao gerar plano", { id, description: String(e) })
+      toastUtils.error("Erro ao gerar plano", { id, description: String(e) })
     } finally {
       clearInterval(interval)
       setIsSubmitting(false)

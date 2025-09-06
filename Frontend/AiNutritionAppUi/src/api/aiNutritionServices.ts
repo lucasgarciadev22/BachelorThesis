@@ -1,4 +1,4 @@
-import type { NutritionPrefs, WeekPlan } from "@/types/nutrition";
+import type { NutritionAnswersDto, WeeklyPlanDto } from "@/types/nutrition";
 
 const BASE_URL = import.meta.env.VITE_NUTRITION_API ?? "http://localhost:5123"
 
@@ -26,9 +26,9 @@ async function readProblem(res: Response) {
 }
 
 export async function generatePlan(
-  prefs: NutritionPrefs,
+  prefs: NutritionAnswersDto,
   opts?: { signal?: AbortSignal; timeoutMs?: number; validate?: boolean }
-): Promise<WeekPlan> {
+): Promise<WeeklyPlanDto> {
   const timeoutMs = opts?.timeoutMs ?? 120000
   const controller = new AbortController()
   const to = setTimeout(() => controller.abort(), timeoutMs)
@@ -53,7 +53,7 @@ export async function generatePlan(
       throw new Error(await readProblem(res))
     }
 
-    const data = (await res.json()) as WeekPlan
+    const data = (await res.json()) as WeeklyPlanDto
 
     // if (opts?.validate !== false) {
     //   const parsed = WeekPlanSchema.safeParse(data)
@@ -63,7 +63,7 @@ export async function generatePlan(
     //   }
     // }
 
-    return data as WeekPlan
+    return data as WeeklyPlanDto
   } catch (err: unknown) {
     if (err && typeof err === "object" && (err as { name?: string }).name === "AbortError") {
       throw new Error("Tempo de requisição esgotado (timeout).")

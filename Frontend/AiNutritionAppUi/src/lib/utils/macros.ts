@@ -1,4 +1,4 @@
-import type { Macros } from "./nutrition"
+import type { Macros } from "../types/nutrition"
 
 export const kcalFromMacros = (m: Macros) => ({
   Protein: m.protein * 4,
@@ -11,5 +11,7 @@ export const totalKcal = (m: Macros) => {
   return k.Protein + k.Carbs + k.Fat
 }
 
-export const pct = (value: number, total: number) =>
-  total > 0 ? Math.round((value / total) * 100) : 0
+export const toPieData = (m: Macros) => {
+  const kcal = kcalFromMacros(m)
+  return Object.entries(kcal).map(([name, value]) => ({ name, value }))
+}

@@ -1,29 +1,29 @@
 import * as React from "react"
 import { useNavigate } from "react-router-dom"
-import type { WeekPlan, NutritionPrefs } from "@/types/nutrition"
+import type { WeeklyPlanDto, NutritionAnswersDto } from "@/types/nutrition"
 import { generatePlan } from "@/api/aiNutritionServices"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Separator } from "@/components/ui/separator"
 import { NutritionWizard } from "@/components/Wizard/NutritionWizard"
-import { toast } from "sonner"
 import { usePlan } from "@/hooks/usePlan"
+import { toastUtils } from "@/lib/utils/toast"
 
 export default function WizardPage() {
   const [loading, setLoading] = React.useState(false)
   const navigate = useNavigate()
   const { setPlan } = usePlan()
 
-  const handleGenerate = async (prefs: NutritionPrefs) => {
+  const handleGenerate = async (prefs: NutritionAnswersDto) => {
     try {
       setLoading(true)
-      const result: WeekPlan = await generatePlan(prefs)
+      const result: WeeklyPlanDto = await generatePlan(prefs)
       setPlan(result)
-      toast("Plano pronto!", { description: "Seu plano semanal foi gerado com sucesso." })
+      toastUtils.success("Plano pronto!", { description: "Seu plano semanal foi gerado com sucesso.", duration:3000 })
       navigate("/result")
     } catch (e) {
-      toast("Erro ao gerar plano", { description: String(e) })
-      throw e // deixa o Wizard atualizar o toast loading -> erro também
+      toastUtils.error("Erro ao gerar plano", { description: String(e) })
+      throw e 
     } finally {
       setLoading(false)
     }
@@ -36,7 +36,6 @@ export default function WizardPage() {
           <CardTitle>Seu plano nutricional</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4">
-          {/* O Wizard já mostra o toast animado; aqui passamos a promise */}
           <NutritionWizard onSubmit={handleGenerate} />
         </CardContent>
       </Card>

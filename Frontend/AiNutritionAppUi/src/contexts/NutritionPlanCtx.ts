@@ -1,9 +1,9 @@
-import type { WeekPlan } from "@/types/nutrition"
+import type { WeeklyPlanDto } from "@/types/nutrition"
 import React from "react"
 
 type NutritionPlanCtx = {
-  plan: WeekPlan | null
-  setPlan: (p: WeekPlan | null) => void
+  plan: WeeklyPlanDto | null
+  setPlan: (p: WeeklyPlanDto | null) => void
 }
 
 export const NutritionPlanCtx = React.createContext<NutritionPlanCtx | undefined>(undefined)

@@ -17,13 +17,12 @@ export type DayPlan = {
   groceries: string[]
 }
 
-export type WeekPlan = {
+export type WeeklyPlanDto = {
   weekStart: string
   days: DayPlan[]
 }
 
-// Payload do wizard
-export type NutritionPrefs = {
+export type NutritionAnswersDto = {
   goal: "cutting" | "maintenance" | "bulking"
   preferences: string[]         // likes
   dislikes: string[]
