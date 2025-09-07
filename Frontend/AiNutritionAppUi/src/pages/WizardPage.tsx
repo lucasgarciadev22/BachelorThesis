@@ -33,7 +33,7 @@ export default function WizardPage() {
     <div className="container mx-auto p-4 grid gap-6">
       <Card>
         <CardHeader>
-          <CardTitle>Gerew Seu Plano Nutricional</CardTitle>
+          <CardTitle>Gere Seu Plano Nutricional</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4">
           <NutritionWizard onSubmit={handleGenerate} />

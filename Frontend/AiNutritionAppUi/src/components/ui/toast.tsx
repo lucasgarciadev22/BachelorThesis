@@ -6,8 +6,8 @@ import {
   XCircle,
 } from "lucide-react";
 
-const toastBaseClasses = "rounded-xl px-3 py-2 text-sm shadow-md";
-const toastLayout = "flex items-center gap-2 justify-center";
+const toastBaseClasses = "px-1 py-1 text-sm shadow-md";
+const toastLayout = "flex items-center gap-1 justify-center";
 const toastTextCenter =
   "text-center [&_[data-title]]:text-center [&_[data-description]]:text-center";
 

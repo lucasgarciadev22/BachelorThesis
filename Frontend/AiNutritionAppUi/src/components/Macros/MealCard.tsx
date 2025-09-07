@@ -12,7 +12,7 @@ export default function MealCard({ meal }: { meal: Meal }) {
       <CardContent className="grid gap-3">
         <MacroPie macros={meal.macros} />
         <div className="text-sm">
-          <div className="font-medium mb-1">Informações</div>
+          <div className="font-medium mb-2 mt-8">Informações</div>
           <div className="grid grid-cols-3 gap-2 text-muted-foreground">
             <div>
               <span className="font-semibold text-foreground">
@@ -29,7 +29,10 @@ export default function MealCard({ meal }: { meal: Meal }) {
           <div className="font-medium mb-1">Ingredientes</div>
           <ul className="list-disc pl-5 space-y-0.5">
             {meal.ingredients.map((ing) => (
-              <li key={ing} className="text-muted-foreground">
+              <li
+                key={ing}
+                className="text-muted-foreground justify-self-start"
+              >
                 {ing}
               </li>
             ))}

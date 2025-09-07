@@ -1,13 +1,12 @@
-import { PieChart } from "lucide-react";
-import { ResponsiveContainer, Pie, Cell, Tooltip } from "recharts";
+import { ResponsiveContainer, Pie, Cell, PieChart, Tooltip } from "recharts";
 import { toPieData } from "@/lib/utils/macros";
-import { formatPct } from "@/lib/utils/format";
 import { PIE_CHART_COLORS } from "@/lib/constants/chart";
 import type { Macros } from "@/types/nutrition";
 import type {
   NameType,
   ValueType,
 } from "recharts/types/component/DefaultTooltipContent";
+import { formatPct } from "@/lib/utils/format";
 
 export default function MacroPie({
   macros,

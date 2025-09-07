@@ -355,14 +355,14 @@ function GenerateAiPlanButton({
       disabled={disabled}
       className="relative inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-2.5
                  bg-gradient-to-r from-primary to-primary/80 text-primary-foreground
-                 shadow-lg transition active:scale-[0.98] disabled:opacity-60"
+                 shadow-lg transition active:scale-[0.98] disabled:opacity-60 cursor-pointer"
       whileHover={{ scale: disabled ? 1 : 1.02 }}
       whileTap={{ scale: disabled ? 1 : 0.98 }}
     >
       {/* Glow animation */}
       <motion.span
         aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-2xl bg-white/10"
+        className="pointer-events-none absolute inset-0 rounded-2xl bg-purple-500/20"
         initial={{ opacity: 0.2 }}
         animate={{ opacity: [0.2, 0.45, 0.2] }}
         transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
@@ -388,7 +388,9 @@ function GenerateAiPlanButton({
             "radial-gradient(14px 14px at 50% 50%, black 60%, transparent 61%)",
         }}
       />
-      <span className="relative z-[1] flex items-center gap-2">{children}</span>
+      <span className="relative z-[1] flex items-center gap-2 hover:text-purple-400 group-hover:text-purple-400">
+        {children}
+      </span>
     </motion.button>
   );
 }
