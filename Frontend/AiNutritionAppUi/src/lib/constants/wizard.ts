@@ -9,9 +9,11 @@ export const STEP_FIELDS: (keyof FormValues)[][] = [
 ];
 
 export const PHRASES = [
-  "Analisando seus gostos…",
-  "Calculando macros ideais…",
-  "Preparando receitas deliciosas…",
-  "Otimizando custo e praticidade…",
-  "Montando sua semana perfeita…",
+  "Analisando seus gostos...",
+  "Consultando livro de receitas...",
+  "Removendo ingredientes não desejados...",
+  "Calculando macros ideais...",
+  "Preparando combinações deliciosas...",
+  "Otimizando custo e praticidade...",
+  "Montando sua semana perfeita...",
 ];

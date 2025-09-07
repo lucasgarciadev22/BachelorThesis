@@ -19,7 +19,7 @@ export default function MacroPie({
   const total = data.reduce((s, d) => s + d.value, 0);
 
   return (
-    <div className="w-full" style={{ height }}>
+    <div className="w-full justify-items-center" style={{ height }}>
       <ResponsiveContainer>
         <PieChart>
           <Pie
@@ -44,7 +44,7 @@ export default function MacroPie({
           />
         </PieChart>
       </ResponsiveContainer>
-      <div className="mt-2 grid grid-cols-3 text-xs text-muted-foreground">
+      <div className="mt-2 grid grid-cols-3 text-xs text-muted-foreground gap-1 justify-items-center">
         {data.map((d, i) => (
           <div key={d.name} className="flex items-center gap-1">
             <span

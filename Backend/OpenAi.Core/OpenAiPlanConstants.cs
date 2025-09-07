@@ -25,7 +25,7 @@ public static class OpenAiPlanConstants
 
     FORMATO:
     • Gere exclusivamente o JSON do plano semanal (7 dias) no formato do schema. 
-    • Preencha o bloco de segurança (safetyReview), detalhando verificações feitas.
+    • Preencha o bloco de segurança (safetyReview) semanal e diário, detalhando verificações feitas.
     ";
 
 

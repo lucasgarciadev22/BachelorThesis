@@ -74,7 +74,7 @@ export function NutritionWizard({ onSubmit }: Props) {
         id,
         description: PHRASES[idx],
       });
-    }, 3000);
+    }, 5000);
 
     try {
       const prefs: NutritionAnswersDto = {
@@ -84,13 +84,8 @@ export function NutritionWizard({ onSubmit }: Props) {
         allergies: csvToArray(values.allergies),
       };
       await onSubmit(prefs);
-      toastUtils.success("Plano pronto!", {
-        id,
-        description: "Seu plano semanal foi gerado com sucesso.",
-      });
-    } catch (e) {
-      toastUtils.error("Erro ao gerar plano", { id, description: String(e) });
     } finally {
+      toastUtils.dismiss(id);
       clearInterval(interval);
       setIsSubmitting(false);
     }
@@ -148,7 +143,7 @@ export function NutritionWizard({ onSubmit }: Props) {
 
           {step === 1 && (
             <div className="grid gap-2">
-              <Label className="text-base">Seu padrão alimentar?</Label>
+              <Label className="text-base">Qual seu padrão alimentar?</Label>
               <Select
                 defaultValue={form.getValues("dietaryPattern")}
                 onValueChange={(v) =>
@@ -176,7 +171,7 @@ export function NutritionWizard({ onSubmit }: Props) {
           {step === 2 && (
             <div className="grid gap-6 md:grid-cols-2">
               <div className="grid gap-2">
-                <Label>Refeições por dia</Label>
+                <Label>Faz quantas refeições por dia?</Label>
                 <Input
                   type="number"
                   min={1}
@@ -185,7 +180,7 @@ export function NutritionWizard({ onSubmit }: Props) {
                 />
               </div>
               <div className="grid gap-2">
-                <Label>Calorias alvo</Label>
+                <Label>Qual a meta semanal de calorias?</Label>
                 <Input
                   type="number"
                   min={800}
@@ -199,7 +194,7 @@ export function NutritionWizard({ onSubmit }: Props) {
           {step === 3 && (
             <div className="grid gap-6 md:grid-cols-3">
               <div className="grid gap-2">
-                <Label>Orçamento</Label>
+                <Label>Como considera seu orçamento atual?</Label>
                 <Select
                   defaultValue={form.getValues("budget")}
                   onValueChange={(v) =>
@@ -220,7 +215,9 @@ export function NutritionWizard({ onSubmit }: Props) {
               </div>
 
               <div className="grid gap-2">
-                <Label>Habilidade culinária</Label>
+                <Label>
+                  Qual considera ser seu nível de habilidade culinária?
+                </Label>
                 <Select
                   defaultValue={form.getValues("cookingSkill")}
                   onValueChange={(v) =>
@@ -243,7 +240,7 @@ export function NutritionWizard({ onSubmit }: Props) {
               </div>
 
               <div className="grid gap-2">
-                <Label>Tempo por refeição</Label>
+                <Label>Qual o tempo dedicado por refeição?</Label>
                 <Select
                   defaultValue={form.getValues("timePerMeal")}
                   onValueChange={(v) =>
@@ -258,9 +255,9 @@ export function NutritionWizard({ onSubmit }: Props) {
                     <SelectValue placeholder="Selecione…" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="curto">Curto</SelectItem>
-                    <SelectItem value="médio">Médio</SelectItem>
-                    <SelectItem value="longo">Longo</SelectItem>
+                    <SelectItem value="curto">Curto (15min)</SelectItem>
+                    <SelectItem value="médio">Médio (30min)</SelectItem>
+                    <SelectItem value="longo">Longo (1h+)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

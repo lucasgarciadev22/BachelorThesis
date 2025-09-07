@@ -1,6 +1,7 @@
 import type { Meal } from "@/types/nutrition";
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import MacroPie from "./MacroPie";
+import { Utensils } from "lucide-react";
 
 export default function MealCard({ meal }: { meal: Meal }) {
   return (
@@ -26,13 +27,14 @@ export default function MealCard({ meal }: { meal: Meal }) {
           </div>
         </div>
         <div className="text-sm">
-          <div className="font-medium mb-1">Ingredientes</div>
+          <div className="mb-1 flex items-center gap-2 font-medium text-foreground">
+            <Utensils className="h-4 w-4 text-primary" aria-hidden="true" />
+            <span>Ingredientes</span>
+          </div>
+
           <ul className="list-disc pl-5 space-y-0.5">
             {meal.ingredients.map((ing) => (
-              <li
-                key={ing}
-                className="text-muted-foreground justify-self-start"
-              >
+              <li key={ing} className="text-muted-foreground">
                 {ing}
               </li>
             ))}

@@ -52,4 +52,5 @@ export const toastUtils = {
       cancel: data?.cancel,
       ...data,
     }),
+  dismiss: (id: number | string) => toast.dismiss(id),
 };

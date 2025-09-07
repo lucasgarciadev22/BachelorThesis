@@ -33,7 +33,9 @@ export default function WizardPage() {
     <div className="container mx-auto p-4 grid gap-6">
       <Card>
         <CardHeader>
-          <CardTitle>Gere Seu Plano Nutricional</CardTitle>
+          <CardTitle>
+            Siga o quiz para gerar seu plano nutricional semanal
+          </CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4">
           <NutritionWizard onSubmit={handleGenerate} />
@@ -63,7 +65,10 @@ export default function WizardPage() {
         <Card>
           <CardHeader>
             <CardTitle>
-              Semana {new Date(plan.weekStart).toLocaleDateString("pt-BR")}
+              Semana {new Date(plan.days[1].date).toLocaleDateString("pt-BR")} -
+              {new Date(
+                plan.days[plan.days.length - 1].date,
+              ).toLocaleDateString("pt-BR")}
             </CardTitle>
           </CardHeader>
           <CardContent className="p-2">

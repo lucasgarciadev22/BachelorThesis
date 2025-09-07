@@ -4,9 +4,12 @@ import { friendlyDate } from "@/lib/utils/format";
 import type { WeeklyPlanDto } from "@/types/nutrition";
 import { DaySummary } from "../Macros/DaySummary";
 import MealCard from "../Macros/MealCard";
+import { Badge } from "../ui/badge";
+import { AlertTriangle, InfoIcon } from "lucide-react";
 
 export function NutritionWeekTabs({ plan }: { plan: WeeklyPlanDto }) {
   const firstDay = plan.days[0]?.date ?? "Dia 1";
+  const checkedAllergens = plan.safetyReview?.checkedAllergens ?? [];
 
   return (
     <Tabs defaultValue={firstDay} className="w-full">
@@ -20,6 +23,33 @@ export function NutritionWeekTabs({ plan }: { plan: WeeklyPlanDto }) {
 
       {plan.days.map((d) => (
         <TabsContent key={d.date} value={d.date} className="mt-4">
+          {checkedAllergens.length > 0 && (
+            <div>
+              <p className="font-bold text-sm">Alérgicos:</p>
+              <div className="mb-4 mt-4 flex flex-wrap gap-2 justify-center">
+                {checkedAllergens.map((w, i) => (
+                  <Badge
+                    key={i}
+                    variant="outline"
+                    className="gap-1 whitespace-normal bg-amber-100 text-yellow-600"
+                  >
+                    <AlertTriangle className="h-3 w-3" />
+                    {w}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <Badge
+            key={plan.weekStart}
+            variant="outline"
+            className="gap-1 mb-4 whitespace-normal bg-purple-100 text-purple-600"
+          >
+            <InfoIcon className="h-3 w-3" />
+            {plan.safetyReview?.notes}
+          </Badge>
+
           <DaySummary day={d} />
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {d.meals.map((m) => (
@@ -33,7 +63,7 @@ export function NutritionWeekTabs({ plan }: { plan: WeeklyPlanDto }) {
                 <CardTitle className="text-base">Lista de compras</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="list-disc pl-5 text-sm text-muted-foreground grid grid-cols-2 md:grid-cols-3 gap-y-1">
+                <ul className="list-disc pl-5 text-sm text-muted-foreground grid grid-cols-2 md:grid-cols-3 gap-y-1 justify-items-start">
                   {d.groceries.map((g) => (
                     <li key={g}>{g}</li>
                   ))}

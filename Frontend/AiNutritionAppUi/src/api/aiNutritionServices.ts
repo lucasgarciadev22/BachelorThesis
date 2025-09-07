@@ -1,6 +1,6 @@
 import type { NutritionAnswersDto, WeeklyPlanDto } from "@/types/nutrition";
 
-const BASE_URL = import.meta.env.VITE_NUTRITION_API ?? "http://localhost:5123";
+const BASE_URL = import.meta.env.DEV ? import.meta.env.VITE_NUTRITION_API : "";
 
 async function readProblem(res: Response) {
   try {
@@ -29,7 +29,7 @@ export async function generatePlan(
   prefs: NutritionAnswersDto,
   opts?: { signal?: AbortSignal; timeoutMs?: number; validate?: boolean },
 ): Promise<WeeklyPlanDto> {
-  const timeoutMs = opts?.timeoutMs ?? 120000;
+  const timeoutMs = opts?.timeoutMs ?? 300000;
   const controller = new AbortController();
   const to = setTimeout(() => controller.abort(), timeoutMs);
   const signal = opts?.signal
