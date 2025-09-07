@@ -1,6 +1,6 @@
 ﻿using AiNutritionApp.Contracts;
 
-namespace AiNutritionApp.Application.Abstractions;
+namespace AiNutritionApp.Application.Providers;
 
 public interface INutritionPlanProvider
 {

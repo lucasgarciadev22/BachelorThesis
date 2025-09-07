@@ -1,5 +1,4 @@
-﻿// OpenAi.Application/ServiceCollectionExtensions.cs
-using AiNutritionApp.Application.Abstractions;
+﻿using AiNutritionApp.Application.Providers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OpenAI.Chat;

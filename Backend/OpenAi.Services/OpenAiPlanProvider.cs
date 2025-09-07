@@ -1,4 +1,4 @@
-﻿using AiNutritionApp.Application.Abstractions;
+﻿using AiNutritionApp.Application.Providers;
 using AiNutritionApp.Contracts;
 using OpenAi.Core;
 using OpenAI.Chat;
@@ -15,14 +15,12 @@ public sealed class OpenAiPlanProvider(ChatClient chat) : INutritionPlanProvider
 
     public async Task<WeeklyPlanDto> GenerateAsync(NutritionAnswersDto answers, CancellationToken ct)
     {
-        // opções por requisição, mas reusando o ResponseFormat estático
         var opts = new ChatCompletionOptions
         {
             ResponseFormat = OpenAiPlanConstants.WeeklyPlanResponseFormat
         };
 
-        // mensagem do usuário ainda é específica por requisição (dados variam)
-        var user = $"""
+        var userRequest = $"""
           Preferências: {string.Join(", ", answers.Preferences ?? [])}
           Rejeições: {string.Join(", ", answers.Dislikes ?? [])}
           Alergias: {string.Join(", ", answers.Allergies ?? [])}
@@ -37,7 +35,7 @@ public sealed class OpenAiPlanProvider(ChatClient chat) : INutritionPlanProvider
 
         var completion = await chat.CompleteChatAsync(
             [ new SystemChatMessage(OpenAiPlanConstants.SystemPrompt),
-              new UserChatMessage(user) ],
+              new UserChatMessage(userRequest) ],
             opts, ct);
 
         var json = completion.Value.Content[0].Text;

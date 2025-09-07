@@ -6,4 +6,5 @@ public record DayPlanDto
     public MacroDto Macros { get; init; } = new();
     public MealDto[] Meals { get; init; } = [];
     public string[] Groceries { get; init; } = [];
+    public DailySafetyReviewDto SafetyReview { get; init; } = new();
 }

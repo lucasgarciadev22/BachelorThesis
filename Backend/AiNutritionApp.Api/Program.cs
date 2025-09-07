@@ -1,4 +1,4 @@
-﻿using AiNutritionApp.Application.Abstractions;
+﻿using AiNutritionApp.Application.Providers;
 using AiNutritionApp.Contracts;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.OpenApi.Models;
@@ -7,14 +7,9 @@ using System.ComponentModel.DataAnnotations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// OpenAI settings via Options (env/appsettings)
 builder.Services.Configure<OpenAiSettings>(builder.Configuration.GetSection("OpenAI"));
-
-// OpenAI provider (ChatClient + INutritionPlanProvider)
 builder.Services.AddOpenAiNutritionProvider();
-
-// ===== Swagger / OpenAPI =====
-builder.Services.AddEndpointsApiExplorer(); // necessário para Minimal APIs
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -24,21 +19,17 @@ builder.Services.AddSwaggerGen(c =>
         Description = "Gera plano semanal de nutrição via OpenAI (JSON estruturado)."
     });
 });
-// ============================
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("DevCors", p =>
-        p.WithOrigins("http://localhost:5173")   // exact origin of your Vite dev server
-         .AllowAnyHeader()                       // allows Content-Type: application/json
-         .AllowAnyMethod()                       // allows POST, OPTIONS, etc.
-                                                 // .AllowCredentials()                  // only if you use cookies/authorization header
+        p.WithOrigins("http://localhost:5173")
+         .AllowAnyHeader()
+         .AllowAnyMethod()
     );
 });
 
 var app = builder.Build();
 
-// Habilite Swagger (normalmente apenas em DEV)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -49,10 +40,10 @@ if (app.Environment.IsDevelopment())
         c.DisplayRequestDuration();
     });
 }
-// (opcional) Em produção, deixe protegido ou desabilite Swagger UI. :contentReference[oaicite:1]{index=1}
 
 app.UseCors("DevCors");
 
+//Configures a minimal API endpoint to generate a weekly nutrition plan based on user inputs.
 app.MapPost("/plans",
     async Task<Results<Ok<WeeklyPlanDto>, ValidationProblem, ProblemHttpResult>> (
         NutritionAnswersDto dto,
@@ -60,10 +51,8 @@ app.MapPost("/plans",
         ILogger<Program> logger,
         CancellationToken ct) =>
     {
-        // validação por DataAnnotations (se você anotar o DTO)
         var validationContext = new ValidationContext(dto);
         var validationResults = new List<ValidationResult>();
-
         if (!Validator.TryValidateObject(dto, validationContext, validationResults, true))
         {
             var errors = validationResults
