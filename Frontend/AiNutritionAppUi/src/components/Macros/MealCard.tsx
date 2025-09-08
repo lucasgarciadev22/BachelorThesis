@@ -2,7 +2,6 @@ import type { Meal } from "@/types/nutrition";
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import MacroPie from "./MacroPie";
 import { Utensils } from "lucide-react";
-import { Separator } from "../ui/separator";
 
 export default function MealCard({ meal }: { meal: Meal }) {
   return (
@@ -11,9 +10,8 @@ export default function MealCard({ meal }: { meal: Meal }) {
         <CardTitle className="text-base">{meal.name}</CardTitle>
         <p className="text-sm text-muted-foreground">{meal.description}</p>
       </CardHeader>
-      <CardContent className="grid gap-3">
+      <CardContent className="grid gap-8">
         <MacroPie macros={meal.macros} />
-        <Separator />
         <div className="text-sm">
           <div className="font-medium mb-2 mt-8">Informações</div>
           <div className="grid grid-cols-4 gap-1 text-muted-foreground justify-items-start">
@@ -30,7 +28,6 @@ export default function MealCard({ meal }: { meal: Meal }) {
             <Utensils className="h-4 w-4 text-primary" aria-hidden="true" />
             <span>Ingredientes</span>
           </div>
-
           <ul className="list-disc pl-5 space-y-0.5 justify-items-start">
             {meal.ingredients.map((ing) => (
               <li key={ing} className="text-muted-foreground">

@@ -5,7 +5,7 @@ import type { WeeklyPlanDto } from "@/types/nutrition";
 import { DaySummary } from "../Macros/DaySummary";
 import MealCard from "../Macros/MealCard";
 import { Badge } from "../ui/badge";
-import { AlertTriangle, InfoIcon } from "lucide-react";
+import { AlertTriangle, InfoIcon, ShoppingBasket } from "lucide-react";
 
 export function NutritionWeekTabs({ plan }: { plan: WeeklyPlanDto }) {
   const firstDay = plan.days[0]?.date ?? "Dia 1";
@@ -60,10 +60,16 @@ export function NutritionWeekTabs({ plan }: { plan: WeeklyPlanDto }) {
           {!!d.groceries?.length && (
             <Card className="mt-6">
               <CardHeader>
-                <CardTitle className="text-base">Lista de compras</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-base text-foreground">
+                  <ShoppingBasket
+                    className="h-4 w-4 text-primary"
+                    aria-hidden="true"
+                  />
+                  Lista de compras
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="list-disc pl-5 text-sm text-muted-foreground grid grid-cols-2 md:grid-cols-3 gap-y-1 justify-items-start">
+                <ul className="list-disc pl-4 text-sm text-muted-foreground grid grid-cols-2 md:grid-cols-3 gap-y-1 justify-items-start">
                   {d.groceries.map((g) => (
                     <li key={g}>{g}</li>
                   ))}
