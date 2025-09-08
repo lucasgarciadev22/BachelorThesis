@@ -25,7 +25,7 @@ export function NutritionWeekTabs({ plan }: { plan: WeeklyPlanDto }) {
         <TabsContent key={d.date} value={d.date} className="mt-4">
           {checkedAllergens.length > 0 && (
             <div>
-              <p className="font-bold text-sm">Alérgicos:</p>
+              <p className="font-semibold text-sm">Alérgicos:</p>
               <div className="mb-4 mt-4 flex flex-wrap gap-2 justify-center">
                 {checkedAllergens.map((w, i) => (
                   <Badge

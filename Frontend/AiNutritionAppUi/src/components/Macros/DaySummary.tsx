@@ -24,7 +24,9 @@ export function DaySummary({ day }: { day: DayPlan }) {
           <div className="text-sm text-muted-foreground">
             {friendlyDate(day.date)}
           </div>
-          <div className="text-2xl font-semibold">{day.totalCalories} kcal</div>
+          <div className="text-2xl font-semibold mb-8">
+            Total do dia: {day.totalCalories} kcal
+          </div>
           <div className="mt-1 text-sm text-muted-foreground">
             Proteína {day.macros.protein}g ({pct.p}) • Carboidrato
             {day.macros.carbs}g ({pct.c}) • Gordura {day.macros.fat}g ({pct.f})
