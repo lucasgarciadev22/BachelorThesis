@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { NutritionWizard } from "@/components/Wizard/NutritionWizard";
 import { toastUtils } from "@/lib/utils/toast";
 import { NutritionWeekTabs } from "@/components/NutritionPlan/NutritionWeekTabs";
+import { CalendarCheck } from "lucide-react";
 
 export default function WizardPage() {
   const [loading, setLoading] = React.useState(false);
@@ -64,7 +65,11 @@ export default function WizardPage() {
       {!loading && plan && (
         <Card>
           <CardHeader>
-            <CardTitle>
+            <CardTitle className="flex items-center gap-2 text-base text-foreground">
+              <CalendarCheck
+                className="h-4 w-4 text-primary"
+                aria-hidden="true"
+              />
               Semana {new Date(plan.days[1].date).toLocaleDateString("pt-BR")} -
               {new Date(
                 plan.days[plan.days.length - 1].date,

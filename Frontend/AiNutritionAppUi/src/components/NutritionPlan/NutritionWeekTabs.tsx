@@ -13,7 +13,7 @@ export function NutritionWeekTabs({ plan }: { plan: WeeklyPlanDto }) {
 
   return (
     <Tabs defaultValue={firstDay} className="w-full">
-      <TabsList className="flex flex-wrap gap-1">
+      <TabsList className="flex flex-wrap gap-1 self-center">
         {plan.days.map((d) => (
           <TabsTrigger key={d.date} value={d.date} className="capitalize">
             {friendlyDate(d.date)}
@@ -24,9 +24,9 @@ export function NutritionWeekTabs({ plan }: { plan: WeeklyPlanDto }) {
       {plan.days.map((d) => (
         <TabsContent key={d.date} value={d.date} className="mt-4">
           {checkedAllergens.length > 0 && (
-            <div>
-              <p className="font-semibold text-sm">Alérgicos:</p>
-              <div className="mb-4 mt-4 flex flex-wrap gap-2 justify-center">
+            <div className="ml-4 justify-items-start text-yellow-700">
+              <p className="font-semibold text-sm ">Alérgicos:</p>
+              <div className="mb-4 mt-4 flex flex-wrap gap-2 justify-start">
                 {checkedAllergens.map((w, i) => (
                   <Badge
                     key={i}

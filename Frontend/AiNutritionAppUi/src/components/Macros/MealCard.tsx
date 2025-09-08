@@ -1,7 +1,7 @@
 import type { Meal } from "@/types/nutrition";
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import MacroPie from "./MacroPie";
-import { Utensils } from "lucide-react";
+import { Link, Utensils } from "lucide-react";
 
 export default function MealCard({ meal }: { meal: Meal }) {
   return (
@@ -41,8 +41,9 @@ export default function MealCard({ meal }: { meal: Meal }) {
             href={meal.recipeUrl}
             target="_blank"
             rel="noreferrer"
-            className="text-sm underline text-primary"
+            className="inline-flex items-center gap-1 text-sm font-medium text-purple-500 hover:underline"
           >
+            <Link className="h-4 w-4 " aria-hidden="true" />
             Ver receita
           </a>
         )}

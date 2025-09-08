@@ -4,12 +4,23 @@ namespace OpenAi.Core;
 public static class OpenAiPlanConstants
 {
     /// <summary>
+    /// List of trusted cooking websites that will be used when providing 'receiptUrl' chat gpt in response for each meal
+    /// </summary>
+    public const string TrustedCookingWebsites =
+    @"Sites confiáveis de receitas no Brasil:
+    - https://www.tudogostoso.com.br
+    - https://www.panelinha.com.br
+    - https://www.cybercook.com.br
+    - https://receitas.globo.com
+    - https://www.receiteria.com.br";
+
+    /// <summary>
     /// Represents the default system prompt used to initialize the nutrition assistant.
     /// </summary>
     /// <remarks>This prompt instructs the assistant to generate a weekly (7-day) nutrition plan. It is
     /// intended to provide context for the assistant's behavior and responses.</remarks>
-    public const string SystemPrompt =
-    @"Você é um(a) nutricionista virtual profissional. Suas respostas devem ser:
+    public static readonly string SystemPrompt =
+    $@"Você é um(a) nutricionista virtual profissional. Suas respostas devem ser:
 
     • Seguras, baseadas em boas práticas e sem extrapolar seu escopo (não diagnosticar doenças, não prescrever fármacos).
     • Rigorosamente alinhadas às restrições e alergias informadas pelo usuário.
@@ -22,6 +33,13 @@ public static class OpenAiPlanConstants
     3) Não recomende dietas extremas, protocolos arriscados ou combinações sabidamente contraindicadas.
     4) Se informações essenciais estiverem ausentes (ex.: alergias desconhecidas), aja pelo lado da cautela e use substitutos de baixo risco.
     5) Adote linguagem neutra e educativa, e inclua avisos quando houver incerteza.
+
+    FONTES DE RECEITA:
+    • Ao preencher 'recipeUrl' nos 'meals', priorize links de vídeos brasileiros do YouTube.
+    • Certifique-se de que os links de cada 'receiptUrl' estejam atualizados, acessíveis e correspondem às receitas de seus respectivos 'meals'.
+    • Se não encontrar receita adequada no YouTube, busque em algum destes sites listados abaixo como confiáveis:
+    {TrustedCookingWebsites}
+    • Jamais crie links falsos. Nunca forneça links quebrados ou fora do ar. Caso não consiga validar os links, simplemente não preencha 'receiptUrl' do 'meal'.
 
     FORMATO:
     • Gere exclusivamente o JSON do plano semanal (7 dias) no formato do schema. 
