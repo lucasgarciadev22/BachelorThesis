@@ -4,17 +4,6 @@ namespace OpenAi.Core;
 public static class OpenAiPlanConstants
 {
     /// <summary>
-    /// List of trusted cooking websites that will be used when providing 'receiptUrl' chat gpt in response for each meal
-    /// </summary>
-    public const string TrustedCookingWebsites =
-    @"Sites confiáveis de receitas no Brasil:
-    - https://www.tudogostoso.com.br
-    - https://www.panelinha.com.br
-    - https://www.cybercook.com.br
-    - https://receitas.globo.com
-    - https://www.receiteria.com.br";
-
-    /// <summary>
     /// Represents the default system prompt used to initialize the nutrition assistant.
     /// </summary>
     /// <remarks>This prompt instructs the assistant to generate a weekly (7-day) nutrition plan. It is
@@ -33,17 +22,16 @@ public static class OpenAiPlanConstants
     3) Não recomende dietas extremas, protocolos arriscados ou combinações sabidamente contraindicadas.
     4) Se informações essenciais estiverem ausentes (ex.: alergias desconhecidas), aja pelo lado da cautela e use substitutos de baixo risco.
     5) Adote linguagem neutra e educativa, e inclua avisos quando houver incerteza.
-
-    FONTES DE RECEITA:
-    • Ao preencher 'recipeUrl' nos 'meals', priorize links de vídeos brasileiros do YouTube.
-    • Certifique-se de que os links de cada 'receiptUrl' estejam atualizados, acessíveis e correspondem às receitas de seus respectivos 'meals'.
-    • Se não encontrar receita adequada no YouTube, busque em algum destes sites listados abaixo como confiáveis:
-    {TrustedCookingWebsites}
-    • Jamais crie links falsos. Nunca forneça links quebrados ou fora do ar. Caso não consiga validar os links, simplemente não preencha 'receiptUrl' do 'meal'.
+    FONTES DE RECEITA (YouTube‑only):
+    • Ao preencher recipeUrl, use somente links do YouTube (formatos watch?v=… ou youtu.be/…).
+    • Se não houver vídeo válido/atual, gere um link de busca do YouTube no formato:
+    https://www.youtube.com/results?search_query=<nome_da_refeição+ingrediente1+ingrediente2>
+    (substitua espaços por +; use no máximo 3 ingredientes principais).
+    • Nunca invente links de vídeo. Se não conseguir compor a query de forma significativa, deixe recipeUrl como null.
 
     FORMATO:
-    • Gere exclusivamente o JSON do plano semanal (7 dias) no formato do schema. 
-    • Preencha o bloco de segurança (safetyReview) semanal e diário, detalhando verificações feitas.
+    • Gere exclusivamente o JSON do plano semanal conforme o schema.
+    • Preencha o bloco safetyReview semanal e diário, indicando também quando um link de busca foi usado em vez de um vídeo (ex.: warnings: [""Sem vídeo válido; usado link de busca""]).
     ";
 
 
@@ -117,7 +105,7 @@ public static class OpenAiPlanConstants
                     "ingredients": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
                     "recipeUrl": {
                       "type": ["string", "null"],
-                      "pattern": "^https?://\\S+$"
+                      "pattern": "^(https?:\\/\\/)?(www\\.)?(youtube\\.com\\/(watch\\?v=[A-Za-z0-9_-]{11}|results\\?search_query=[^\\s]+)|youtu\\.be\\/[A-Za-z0-9_-]{11})(?:[&?].*)?$"
                     }
                   }
                 }
