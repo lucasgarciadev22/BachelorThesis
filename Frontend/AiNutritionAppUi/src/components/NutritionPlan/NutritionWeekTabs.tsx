@@ -5,11 +5,17 @@ import type { WeeklyPlanDto } from "@/types/nutrition";
 import { DaySummary } from "../Macros/DaySummary";
 import MealCard from "../Macros/MealCard";
 import { Badge } from "../ui/badge";
-import { AlertTriangle, InfoIcon, ShoppingBasket } from "lucide-react";
+import {
+  AlertTriangle,
+  CircleXIcon,
+  InfoIcon,
+  ShoppingBasket,
+} from "lucide-react";
 
 export function NutritionWeekTabs({ plan }: { plan: WeeklyPlanDto }) {
   const firstDay = plan.days[0]?.date ?? "Dia 1";
   const checkedAllergens = plan.safetyReview?.checkedAllergens ?? [];
+  const conflictsFound = plan.safetyReview?.conflictsFound ?? [];
 
   return (
     <Tabs defaultValue={firstDay} className="w-full">
@@ -41,8 +47,26 @@ export function NutritionWeekTabs({ plan }: { plan: WeeklyPlanDto }) {
             </div>
           )}
 
+          {conflictsFound.length > 0 && (
+            <div className="ml-4 justify-items-start text-orange-700">
+              <p className="font-semibold text-sm ">Conflitos:</p>
+              <div className="mb-4 mt-4 flex flex-wrap gap-2 justify-start">
+                {conflictsFound.map((w, i) => (
+                  <Badge
+                    key={i}
+                    variant="outline"
+                    className="gap-1 whitespace-normal bg-orange-100 text-orange-600"
+                  >
+                    <CircleXIcon className="h-3 w-3" />
+                    {w}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
           <Badge
-            key={plan.weekStart}
+            key={plan.weekStart + "notes"}
             variant="outline"
             className="gap-1 mb-4 whitespace-normal bg-purple-100 text-purple-600"
           >
