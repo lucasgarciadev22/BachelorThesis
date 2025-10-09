@@ -1,0 +1,6 @@
+services:
+  ainutritionapp.api:
+    image: ${DOCKER_REGISTRY-}ainutritionappapi
+    build:
+      context: .
+      dockerfile: AiNutritionApp.Api/Dockerfile
