@@ -4,3 +4,9 @@ services:
     build:
       context: .
       dockerfile: AiNutritionApp.Api/Dockerfile
+
+  ainutritionapp.ui:
+    image: ainutritionappui
+    build:
+      context: ../Frontend/AiNutritionAppUi
+      dockerfile: Dockerfile
