@@ -15,8 +15,8 @@ services:
 
   ainutritionapp.ui:
     environment:
-      - VITE_API_URL=http://ainutritionapp.api:8080
+      - VITE_API_URL=http://localhost:8080
     ports:
-      - "5173:5173"
+      - "8082:80"
     depends_on:
       - ainutritionapp.api
