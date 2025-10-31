@@ -37,8 +37,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "AiNutrition API v1");
-        c.DocumentTitle = "AiNutrition – Swagger";
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Ai Nutrition App API v1");
+        c.DocumentTitle = "Ai Nutrition App API – Swagger";
         c.DisplayRequestDuration();
     });
 }
