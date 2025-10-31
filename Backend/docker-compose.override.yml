@@ -14,8 +14,6 @@ services:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
   ainutritionapp.ui:
-    environment:
-      - VITE_API_URL=http://localhost:8080
     ports:
       - "8082:80"
     depends_on:

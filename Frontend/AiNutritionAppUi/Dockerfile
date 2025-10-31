@@ -16,7 +16,6 @@ COPY . .
 # Build the app
 RUN npm run build
 
-
 # Step 2: Use an Nginx image to serve the static files
 FROM nginx:alpine
 
@@ -25,6 +24,8 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Copy custom Nginx configuration file
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 CMD wget -qO- http://localhost/ || exit 1
 
 # Expose port 80
 EXPOSE 80

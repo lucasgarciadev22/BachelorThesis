@@ -30,6 +30,8 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+app.UseCors("DevCors");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -41,7 +43,6 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseCors("DevCors");
 
 //Configures a minimal API endpoint to generate a weekly nutrition plan based on user inputs.
 app.MapPost("/plans",
