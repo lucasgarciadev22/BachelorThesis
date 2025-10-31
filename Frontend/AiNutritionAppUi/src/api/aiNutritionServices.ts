@@ -39,7 +39,7 @@ export async function generatePlan(
     : controller.signal;
 
   try {
-    const res = await fetch(`${BASE_URL}/plans`, {
+    const res = await fetch(`${BASE_URL}/api/plans`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

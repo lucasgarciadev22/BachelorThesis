@@ -5,47 +5,41 @@ using Microsoft.OpenApi.Models;
 using OpenAi.Application;
 using System.ComponentModel.DataAnnotations;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<OpenAiSettings>(builder.Configuration.GetSection("OpenAI"));
 builder.Services.AddOpenAiNutritionProvider();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
+builder.Services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo
 {
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "AiNutrition API",
-        Version = "v1",
-        Description = "Gera plano semanal de nutrição via OpenAI (JSON estruturado)."
-    });
-});
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("DevCors", p =>
+    Title = "Ai Nutrition App API - Bachelor Thesis by Lucas Garcia",
+    Version = "v1",
+    Description = "Generates weekly nutritional plan via OpenAI API"
+}));
+builder.Services.AddCors(options => options.AddPolicy("DevCors", p =>
         p.WithOrigins("http://localhost:8082")
          .AllowAnyHeader()
          .AllowAnyMethod()
-    );
-});
+    ));
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 app.UseCors("DevCors");
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
+    _ = app.UseSwagger();
+    _ = app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Ai Nutrition App API v1");
-        c.DocumentTitle = "Ai Nutrition App API – Swagger";
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Ai Nutrition App API - Bachelor Thesis by Lucas Garcia");
+        c.DocumentTitle = "Ai Nutrition App API - Bachelor Thesis by Lucas Garcia – Swagger";
         c.DisplayRequestDuration();
     });
 }
 
 
 //Configures a minimal API endpoint to generate a weekly nutrition plan based on user inputs.
-app.MapPost("/plans",
+app.MapPost("api/plans",
     async Task<Results<Ok<WeeklyPlanDto>, ValidationProblem, ProblemHttpResult>> (
         NutritionAnswersDto dto,
         INutritionPlanProvider provider,
@@ -67,7 +61,7 @@ app.MapPost("/plans",
 
         try
         {
-            var plan = await provider.GenerateAsync(dto, ct);
+            WeeklyPlanDto plan = await provider.GenerateAsync(dto, ct);
             return TypedResults.Ok(plan);
         }
         catch (Exception ex)
